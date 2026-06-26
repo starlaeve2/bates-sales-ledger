@@ -13,12 +13,39 @@ try:
 except Exception as e:
     st.error(f"Gemini Setup Error: {e}")
 
-# 2. Setup Google Sheets Connection directly (No Secrets Manager Needed!)
+# 2. Setup Google Sheets Connection directly
 credentials_dict = {
     "type": "service_account",
     "project_id": "mimetic-planet-500614-f2",
     "private_key_id": "0d62eda167cb56b1a9424ac6178daae815fd3d82",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC17KvltXmPRaC9\nT+wMJRXuVhmOLYUpkU3LWVAzqTymeFp4pSGZDrCSuTngT7Gb5aQds9WyRRlUP3Ug\n3PDGAA4hIUEXuycZhDjTojIxLkZg0TP+/o+XcdN28srAvJddDvHOGAc414xo8/vF\n4a5GUGT6J+jGdsW7otVV+p1J0W0U0RFYNJk5VgzwEGJc1ofHAlnyO9NsidCY35X2\n6EoRLUr5MR6ZTcAlDT0p2YRU8OBbQeuTqfIo1BNL6RT/laBk86Zh7DQ1/naIde6T\n1IZNAzv+0CUpI5zST5lGa3PrsON2nuW6KoPjthb+JaYIcCGcQ6M/D3yEhtBOuqNg\nykcdLVCvAgMBAAECggEAVqcUeaWm8QdJOOMInABOIegA5CfqdZIwa9tuyCykJubM\nsQp2pmDI2ho/5wgOoSMQuNUfxHoFRouzTqPuS2FbWYxtZNBQH2dLagKnxaU1AIil\nK6A05P3iq5WZ3ZP2xOyJYJExX3HL/3G3StnkGLnSXxUDWwTXyjgVRY7JvI90VaUx\nvASXM6N201R8olYnDnd6XeEtiCGmEwX8Py6/yxWto5DuNVcG0kUummABxS3f8BQd\n89IIBexl7UN7vGydL/vBqcFTZFcxNdh7u6mO2PpIBrkTMo2SD9R3OOxrGLIfSsiN\nlE0fuVYNcCEWG/fZEt0xi+0POFHF4CjnIIZsXZldgQKBgQDiV8c408Fisl5uSxIf\n/Q7SqiJOzKpYLfCbRhiifuRLEmmYOpDL5HTelGRSiGhN0GWKHuk3CplPPX+XdiGE\ngNstDcW1e/bv0eXI9FahAdxIRpDOflbc7VfYasWUbfPIq09pkBPLkvpYL6oMv/hL\nLPQoy7dfdH8ziiAnYFa+4bEskwKBgQDNwveE8C/v/dT876DmgSOcoC5rOUULmjQB\nE+tZawHPRrWIrjYYyPXJhwka7NCy1onc3TMvLYugz77WXr2CqPnBlTVYfyiL/GvJ\nm4MO3itGHUYUkiAIejyVUOyQltLSIGePWPnR2WlrCnXGLsRLY/l/GXk4LhHcp1pC\ntv26D5y49QKBgBcMvVsKJX15kKhGuNfNG39UmB3SNd64/vGxF70kkvcaLuqzvB8n\nasdn8Td+cLDL8is4rqNOTwKEzsOL4inuPWO/LU0oDKOrim0GhPPsjpRFq2V79DiX\awS9CtXsxJDA8VtcssdedmQYpoaZ3h05vLuS01/DK1kCTff0laDmtvZFAoGBAMkv\nG7MY4dZHGwyhBHK8y+Ql3p0qZu88PCLdph1M+nz/hxn4NJ6xR1lftjBkYn6qNCwH\nADfd0YtP9SlHgwaRT3rO+FTqJ+wPyBhc/Jz579fjYZVVdwqy8i+Q621IeyPHWVqY\nxdNAP8nQdW1sZrPMMbPrZVHgAcj8vM1EfPuCrltNAoGBAIk9NZAw+/fsRftly3+I\nEM3Cc6c1RZyr2CNzxpbvwOfgHtTMTNqGTZmuFjGmAGi3SjIKjwxfjHvJuUxF+5Dp\nnmXuuQBAHX5iMa0TL4CqSb+NjOSD9lvGbRkm9R0mRyzL17nIup03vjJ7Ew4AdSfyo\nLwO/Ojmf+lkCP2F41isXuX2o\n-----END PRIVATE KEY-----\n",
+    "private_key": """-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC17KvltXmPRaC9
+T+wMJRXuVhmOLYUpkU3LWVAzqTymeFp4pSGZDrCSuTngT7Gb5aQds9WyRRlUP3Ug
+3PDGAA4hIUEXuycZhDjTojIxLkZg0TP+/o+XcdN28srAvJddDvHOGAc414xo8/vF
+4a5GUGT6J+jGdsW7otVV+p1J0W0U0RFYNJk5VgzwEGJc1ofHAlnyO9NsidCY35X2
+6EoRLUr5MR6ZTcAlDT0p2YRU8OBbQeuTqfIo1BNL6RT/laBk86Zh7DQ1/naIde6T
+1IZNAzv+0CUpI5zST5lGa3PrsON2nuW6KoPjthb+JaYIcCGcQ6M/D3yEhtBOuqNg
+ykcdLVCvAgMBAAECggEAVqcUeaWm8QdJOOMInABOIegA5CfqdZIwa9tuyCykJubM
+sQp2pmDI2ho/5wgOoSMQuNUfxHoFRouzTqPuS2FbWYxtZNBQH2dLagKnxaU1AIil
+K6A05P3iq5WZ3ZP2xOyJYJExX3HL/3G3StnkGLnSXxUDWwTXyjgVRY7JvI90VaUx
+vASXM6N201R8olYnDnd6XeEtiCGmEwX8Py6/yxWto5DuNVcG0kUummABxS3f8BQd
+89IIBexl7UN7vGydL/vBqcFTZFcxNdh7u6mO2PpIBrkTMo2SD9R3OOxrGLIfSsiN
+lE0fuVYNcCEWG/fZEt0xi+0POFHF4CjnIIZsXZldgQKBgQDiV8c408Fisl5uSxIf
+/Q7SqiJOzKpYLfCbRhiifuRLEmmYOpDL5HTelGRSiGhN0GWKHuk3CplPPX+XdiGE
+gNstDcW1e/bv0eXI9FahAdxIRpDOflbc7VfYasWUbfPIq09pkBPLkvpYL6oMv/hL
+LPQoy7dfdH8ziiAnYFa+4bEskwKBgQDNwveE8C/v/dT876DmgSOcoC5rOUULmjQB
+E+tZawHPRrWIrjYYyPXJhwka7NCy1onc3TMvLYugz77WXr2CqPnBlTVYfyiL/GvJ
+m4MO3itGHUYUkiAIejyVUOyQltLSIGePWPnR2WlrCnXGLsRLY/l/GXk4LhHcp1pC
+tv26D5y49QKBgBcMvVsKJX15kKhGuNfNG39UmB3SNd64/vGxF70kkvcaLuqzvB8n
+asdn8Td+cLDL8is4rqNOTwKEzsOL4inuPWO/LU0oDKOrim0GhPPsjpRFq2V79DiX
+awS9CtXsxJDA8VtcssdedmQYpoaZ3h05vLuS01/DK1kCTff0laDmtvZFAoGBAMkv
+G7MY4dZHGwyhBHK8y+Ql3p0qZu88PCLdph1M+nz/hxn4NJ6xR1lftjBkYn6qNCwH
+ADfd0YtP9SlHgwaRT3rO+FTqJ+wPyBhc/Jz579fjYZVVdwqy8i+Q621IeyPHWVqY
+xdNAP8nQdW1sZrPMMbPrZVHgAcj8vM1EfPuCrltNAoGBAIk9NZAw+/fsRftly3+I
+EM3Cc6c1RZyr2CNzxpbvwOfgHtTMTNqGTZmuFjGmAGi3SjIKjwxfjHvJuUxF+5Dp
+nmXuuQBAHX5iMa0TL4CqSb+NjOSD9lvGbRkm9R0mRyzL17nIup03vjJ7Ew4AdSfyo
+LwO/Ojmf+lkCP2F41isXuX2o
+-----END PRIVATE KEY-----""",
     "client_email": "sheets-bot@mimetic-planet-500614-f2.iam.gserviceaccount.com",
     "client_id": "106061085208077860075",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
