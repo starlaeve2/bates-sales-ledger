@@ -6,17 +6,18 @@ from PIL import Image
 import io
 import json
 
-# 1. Setup the AI (Gemini)
+# 1. Setup the AI (Gemini 2.5)
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # This line below is the crucial update to the 2026 model version
+    model = genai.GenerativeModel('gemini-2.5-flash')
 except Exception as e:
     st.error("Missing Gemini API Key. Please add it to Streamlit Secrets.")
 
 # 2. Setup Google Sheets Connection
 try:
-    # We safely convert the secrets text into a real Python dictionary
+    # Safely convert the secrets text into a real Python dictionary
     credentials_dict = json.loads(st.secrets["gspread_credentials"])
     
     # Authenticate with Google
