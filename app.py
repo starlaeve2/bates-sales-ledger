@@ -9,7 +9,7 @@ from datetime import datetime
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
 # 1. Setup the AI (Gemini 2.5) directly
-api_key = "AQ.Ab8RN6JWFIZUB-rscRW-TcseQO4PhWei0JDquHSvZu8XupsIjg"
+api_key = "AQ.Ab8RN6I25LS1VwayxsGJKf_lGU4DAZ7pCSP1417jdWC4S5AEqg"
 try:
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-2.5-flash')
