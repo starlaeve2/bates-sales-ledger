@@ -16,82 +16,66 @@ try:
 except Exception as e:
     st.error(f"Gemini Setup Error: {e}")
 
-# 2. Initialize our local session storage so the app remembers rows while open
+# 2. Initialize our local session storage
 if "ledger_data" not in st.session_state:
     st.session_state.ledger_data = []
 
 # App Header
 st.title("📸 Quick Sale Ledger")
-st.write("Snap a pic, enter details, and download your spreadsheet at the end of the day.")
+st.write("Snap a pic, edit the description, and log it.")
 st.write("---")
 
-# Camera & Data Input Section
+# Camera Input
 img_file = st.camera_input("Take a photo of the items")
 
-# Side-by-side inputs for cleaner mobile layout
-col1, col2 = st.columns(2)
-with col1:
-    amount = st.text_input("Amount ($)", value="10")
-with col2:
-    payment = st.selectbox("Payment Method", ["Cash", "Venmo", "Check", "Card"])
+# Session state to hold the AI's temporary result before logging
+if "temp_description" not in st.session_state:
+    st.session_state.temp_description = ""
 
-# Log Sale Button
-if st.button("Log Sale to Local Ledger", use_container_width=True):
-    if img_file is not None:
-        with st.spinner("AI is itemizing the photo..."):
+if img_file is not None:
+    # Only run AI if we haven't already generated a description for this photo
+    if st.session_state.temp_description == "":
+        with st.spinner("AI is analyzing the photo..."):
             try:
-                # Process Image for AI
                 image_bytes = img_file.getvalue()
                 image = Image.open(io.BytesIO(image_bytes))
-                
-                # Ask Gemini for the description
-                prompt = "Look at this image of items bought at a sale. Give me a brief, clear, itemized description of the physical objects you see. Do not include prices. Keep it under 8 words."
+                prompt = "Look at this image. Give me a brief, clear description of the items. Keep it under 8 words."
                 response = model.generate_content([prompt, image])
-                description = response.text.strip()
-                
-                # Create a timestamp
-                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                
-                # Save data directly to the app's internal running memory list
-                new_row = {
-                    "Timestamp": current_time,
-                    "Item Description": description,
-                    "Amount ($)": amount,
-                    "Payment Method": payment
-                }
-                st.session_state.ledger_data.append(new_row)
-                st.success(f"Added: {description} | ${amount}")
-                
+                st.session_state.temp_description = response.text.strip()
             except Exception as e:
-                st.error(f"Error processing item: {e}")
-    else:
-        st.warning("Please snap a photo first!")
+                st.error(f"Error: {e}")
 
-st.write("---")
+    # Display editable fields for the user to approve/change
+    st.subheader("Confirm Details")
+    edited_description = st.text_input("Item Description:", value=st.session_state.temp_description)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        amount = st.text_input("Amount ($)", value="10")
+    with col2:
+        payment = st.selectbox("Payment Method", ["Cash", "Venmo", "Check", "Card"])
 
-# 3. Running Data Sheet View & Download Block
-if st.session_state.ledger_data:
-    st.subheader("📋 Today's Logged Sales")
-    
-    # Convert memory list to a clean visual table
-    df = pd.DataFrame(st.session_state.ledger_data)
-    st.dataframe(df, use_container_width=True)
-    
-    # Convert table to standard Excel/CSV data format for downloading
-    csv_data = df.to_csv(index=False).encode('utf-8')
-    
-    # Big friendly download button
-    st.download_button(
-        label="📥 Download Finished Spreadsheet (.csv)",
-        data=csv_data,
-        file_name=f"bates_estates_ledger_{datetime.now().strftime('%Y-%m-%d')}.csv",
-        mime="text/csv",
-        use_container_width=True
-    )
-    
-    # Clear Memory Option
-    if st.button("Clear App Memory / Start New Day"):
-        st.session_state.ledger_data = []
+    # Final "Log" button
+    if st.button("Confirm & Log to Ledger", use_container_width=True):
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        new_row = {
+            "Timestamp": current_time,
+            "Item Description": edited_description,
+            "Amount ($)": amount,
+            "Payment Method": payment
+        }
+        st.session_state.ledger_data.append(new_row)
+        st.success(f"Logged: {edited_description}")
+        # Reset for next item
+        st.session_state.temp_description = ""
         st.rerun()
-else:
-    st.info("No items logged yet. Your ledger table will show up here as soon as you save your first item!")
+
+# Display Table
+if st.session_state.ledger_data:
+    st.write("---")
+    st.subheader("Today's Logged Sales")
+    df = pd.DataFrame(st.session_state.ledger_data)
+    st.table(df)
+    
+    csv = df.to_csv(index=False).encode('utf-8')
+    st.download_button("📥 Download Finished Spreadsheet (.csv)", csv, "sales_ledger.csv", "text/csv")
