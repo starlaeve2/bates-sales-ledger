@@ -8,7 +8,7 @@ from datetime import datetime
 # Stately mobile layout settings
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
-# 1. Setup the AI (Gemini 2.5) directly
+# 1. Setup the AI
 api_key = "AQ.Ab8RN6I25LS1VwayxsGJKf_lGU4DAZ7pCSP1417jdWC4S5AEqg"
 try:
     genai.configure(api_key=api_key)
@@ -16,30 +16,30 @@ try:
 except Exception as e:
     st.error(f"Gemini Setup Error: {e}")
 
-# 2. Initialize our local session storage
+# 2. Initialize session storage
 if "ledger_data" not in st.session_state:
     st.session_state.ledger_data = []
+if "temp_description" not in st.session_state:
+    st.session_state.temp_description = ""
 
 # App Header
 st.title("📸 Quick Sale Ledger")
-st.write("Snap a pic, edit the description, and log it.")
+st.write("Snap a pic, edit the items, and log it.")
 st.write("---")
 
 # Camera Input
 img_file = st.camera_input("Take a photo of the items")
 
-# Session state to hold the AI's temporary result before logging
-if "temp_description" not in st.session_state:
-    st.session_state.temp_description = ""
-
 if img_file is not None:
-    # Only run AI if we haven't already generated a description for this photo
+    # Only run AI if we haven't generated a description for this photo yet
     if st.session_state.temp_description == "":
-        with st.spinner("AI is analyzing the photo..."):
+        with st.spinner("AI is itemizing the photo..."):
             try:
                 image_bytes = img_file.getvalue()
                 image = Image.open(io.BytesIO(image_bytes))
-                prompt = "Look at this image. Give me a brief, clear description of the items. Keep it under 8 words."
+                
+                # Updated prompt for a clean, comma-separated list
+                prompt = "List the main physical items in this image as a comma-separated list. Do not include descriptions of people, hands, or actions. Just the items."
                 response = model.generate_content([prompt, image])
                 st.session_state.temp_description = response.text.strip()
             except Exception as e:
