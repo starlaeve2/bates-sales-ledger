@@ -18,8 +18,7 @@ except Exception as e:
 # We safely connect using standard Streamlit Google Sheets integration
 try:
     import json
-    creds_dict = json.loads(st.secrets["gspread_credentials"])
-    gc = gspread.service_account_from_dict(creds_dict)
+credentials_dict = json.loads(st.secrets["gspread_credentials"])
     
     # Your specific Sheet ID
     SPREADSHEET_ID = "1Vn4Z-19fZSo-xLiY4juUcCosRxsp4E4vB1nL0Veirms"
