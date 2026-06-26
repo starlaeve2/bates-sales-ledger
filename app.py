@@ -23,15 +23,20 @@ if img_file is not None:
     if st.session_state.temp_description == "":
         with st.spinner("AI is itemizing..."):
             image = Image.open(io.BytesIO(img_file.getvalue()))
-            prompt = "List the main physical items in this image as a comma-separated list. Just the items."
+            prompt = "List the main physical items in this image as a comma-separated list."
             response = model.generate_content([prompt, image])
             st.session_state.temp_description = response.text.strip()
 
     st.subheader("Edit & Submit")
     
-    # URL-encode the description to ensure it works properly in the link
+    # URL-encode the description for the form
     encoded_desc = urllib.parse.quote(st.session_state.temp_description)
-    prefilled_url = f"https://docs.google.com/forms/d/e/1FAIpQLSe6ZMMMHJMaFB_R0Sjk13umUqjC50Bvq2eVSGMv9BO-_N8_fw/viewform?embedded=true&entry.1364187317={encoded_desc}"
+    
+    # Pre-filled link with only the Description field
+    prefilled_url = (
+        f"https://docs.google.com/forms/d/e/1FAIpQLSe6ZMMMHJMaFB_R0Sjk13umUqjC50Bvq2eVSGMv9BO-_N8_fw/viewform?embedded=true"
+        f"&entry.1364187317={encoded_desc}"
+    )
     
     st.components.v1.iframe(prefilled_url, height=600, scrolling=True)
 
