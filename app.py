@@ -5,9 +5,9 @@ import gspread
 from PIL import Image
 import io
 
-# 1. Setup the AI (Gemini 2.5)
+# 1. Setup the AI (Gemini 2.5) using the new section name
 try:
-    api_key = st.secrets["GEMINI_API_KEY"]
+    api_key = st.secrets["gemini"]["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-2.5-flash')
 except Exception as e:
@@ -15,7 +15,6 @@ except Exception as e:
 
 # 2. Setup Google Sheets Connection
 try:
-    # Read directly from the Streamlit secrets manager safely
     credentials_dict = dict(st.secrets["gspread_credentials"])
     
     creds = service_account.Credentials.from_service_account_info(
