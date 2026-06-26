@@ -10,8 +10,7 @@ import json
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-except Exception as e:
+  model = genai.GenerativeModel('gemini-1.5-flash-latest')
     st.error("Missing Gemini API Key. Please add it to Streamlit Secrets.")
 
 # 2. Setup Google Sheets Connection
