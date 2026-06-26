@@ -2,6 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 from PIL import Image
 import io
+import urllib.parse
 
 # 1. Configuration
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
@@ -22,18 +23,17 @@ if img_file is not None:
     if st.session_state.temp_description == "":
         with st.spinner("AI is itemizing..."):
             image = Image.open(io.BytesIO(img_file.getvalue()))
-            # Strict prompt for comma-separated list
-            prompt = "List the main physical items in this image as a comma-separated list. Do not include descriptions of people, hands, or actions. Just the items."
+            prompt = "List the main physical items in this image as a comma-separated list. Just the items."
             response = model.generate_content([prompt, image])
             st.session_state.temp_description = response.text.strip()
 
-    st.subheader("Confirm & Submit")
-    st.info("Copy the list below, paste it into the form, fill in the price, and hit Submit.")
-    st.code(st.session_state.temp_description)
+    st.subheader("Edit & Submit")
     
-    # Your Google Form integration
-    form_url = "https://docs.google.com/forms/d/e/1FAIpQLSe6ZMMMHJMaFB_R0Sjk13umUqjC50Bvq2eVSGMv9BO-_N8_fw/viewform?embedded=true"
-    st.components.v1.iframe(form_url, height=600, scrolling=True)
+    # URL-encode the description to ensure it works properly in the link
+    encoded_desc = urllib.parse.quote(st.session_state.temp_description)
+    prefilled_url = f"https://docs.google.com/forms/d/e/1FAIpQLSe6ZMMMHJMaFB_R0Sjk13umUqjC50Bvq2eVSGMv9BO-_N8_fw/viewform?embedded=true&entry.1364187317={encoded_desc}"
+    
+    st.components.v1.iframe(prefilled_url, height=600, scrolling=True)
 
     if st.button("Reset for New Item"):
         st.session_state.temp_description = ""
