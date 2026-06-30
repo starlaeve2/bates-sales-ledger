@@ -7,8 +7,8 @@ import urllib.parse
 # 1. Configuration
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
-api_key = "AQ.Ab8RN6I25LS1VwayxsGJKf_lGU4DAZ7pCSP1417jdWC4S5AEqg"
-genai.configure(api_key=api_key)
+# Configure the client using Streamlit's secure secrets
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 model = genai.GenerativeModel('gemini-2.5-flash')
 
 if "temp_description" not in st.session_state:
