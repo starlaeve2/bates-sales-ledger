@@ -37,7 +37,8 @@ def get_ai_response(prompt, image):
 # --- Main App Logic ---
 st.title("Bates Estates Ledger 📸")
 
-img_file = st.file_uploader("Take a photo of the item", type=["jpg", "jpeg", "png"])
+# Use camera input instead of file uploader
+img_file = st.camera_input("Take a photo of the item")
 
 if img_file is not None:
     # Process the image
