@@ -1,17 +1,20 @@
 import streamlit as st
 import PIL.Image
-from google.generativeai import GenerativeModel
+import io
+import google.generativeai as genai
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from google.api_core import exceptions
+
 # 1. Configuration
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
 # Configure the client using Streamlit's secure secrets
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-2.5-flash')
+model = genai.GenerativeModel('gemini-1.5-flash')
+
 # --- Helper Functions ---
 
-# 1. Image processing to stay under token limits
+# Image processing to stay under token limits
 def process_image(uploaded_file):
     img = PIL.Image.open(uploaded_file)
     max_size = 1024
@@ -21,7 +24,7 @@ def process_image(uploaded_file):
         img = img.resize((max_size, new_height), PIL.Image.Resampling.LANCZOS)
     return img
 
-# 2. Retry-enabled API call
+# Retry-enabled API call
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=10),
@@ -30,3 +33,28 @@ def process_image(uploaded_file):
 )
 def get_ai_response(prompt, image):
     return model.generate_content([prompt, image])
+
+# --- Main App Logic ---
+st.title("Bates Estates Ledger 📸")
+
+img_file = st.file_uploader("Take a photo of the item", type=["jpg", "jpeg", "png"])
+
+if img_file is not None:
+    # Process the image
+    processed_img = process_image(img_file)
+    
+    prompt = "List the main physical items in this image as a comma-separated list."
+    
+    try:
+        with st.spinner("AI is itemizing..."):
+            # Call the retry-enabled function
+            response = get_ai_response(prompt, processed_img)
+            st.session_state.temp_description = response.text.strip()
+            st.write(st.session_state.temp_description)
+    except exceptions.ResourceExhausted:
+        st.error("Still hitting limits. Please wait a moment and try again.")
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {e}")
+
+st.subheader("Edit & Submit")
+# (Rest of your existing submit logic goes here)
