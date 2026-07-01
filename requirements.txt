@@ -3,3 +3,4 @@ gspread
 streamlit
 tenacity
 Pillow
+oauth2client
