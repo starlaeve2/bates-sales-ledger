@@ -1,2 +1,5 @@
 google-generativeai
 gspread
+streamlit
+tenacity
+Pillow
