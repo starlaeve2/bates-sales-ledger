@@ -8,13 +8,14 @@ from google.api_core import exceptions
 # 1. Configuration
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
-# Configure the client using Streamlit's secure secrets
+# Configure the client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('models/gemini-1.5-flash')
+# Using the standard model name without the "models/" prefix
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- Helper Functions ---
 
-# Image processing to stay under token limits
+# Image processing
 def process_image(uploaded_file):
     img = PIL.Image.open(uploaded_file)
     max_size = 1024
@@ -37,25 +38,20 @@ def get_ai_response(prompt, image):
 # --- Main App Logic ---
 st.title("Bates Estates Ledger 📸")
 
-# Use camera input instead of file uploader
 img_file = st.camera_input("Take a photo of the item")
 
 if img_file is not None:
-    # Process the image
     processed_img = process_image(img_file)
-    
     prompt = "List the main physical items in this image as a comma-separated list."
     
     try:
         with st.spinner("AI is itemizing..."):
-            # Call the retry-enabled function
             response = get_ai_response(prompt, processed_img)
             st.session_state.temp_description = response.text.strip()
             st.write(st.session_state.temp_description)
     except exceptions.ResourceExhausted:
         st.error("Still hitting limits. Please wait a moment and try again.")
     except Exception as e:
-        st.error(f"An unexpected error occurred: {e}")
+        st.error(f"Error: {e}")
 
 st.subheader("Edit & Submit")
-# (Rest of your existing submit logic goes here)
