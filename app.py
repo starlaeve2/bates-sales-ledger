@@ -16,13 +16,12 @@ model = genai.GenerativeModel('gemini-3.5-flash')
 
 # --- Google Sheets Setup ---
 def get_sheet_client():
-    # Uses Streamlit secrets for credentials
     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
              "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
     creds_dict = st.secrets["gcp_service_account"]
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
-    return client.open("Bates Estates Ledger").sheet1 # Change "Bates Estates Ledger" to your sheet name
+    return client.open("Bates Estates Ledger").sheet1
 
 # --- Helper Functions ---
 def process_image(uploaded_file):
@@ -73,6 +72,6 @@ if submit_button:
         sheet = get_sheet_client()
         sheet.append_row([edited_description])
         st.success("Successfully added to the ledger!")
-        st.session_state.temp_description = "" # Clear after success
+        st.session_state.temp_description = ""
     except Exception as e:
         st.error(f"Could not submit to Sheet: {e}")
