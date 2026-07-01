@@ -10,7 +10,9 @@ st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="
 
 # Configure the client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash')
+
+# UPDATED: Using the current stable production model
+model = genai.GenerativeModel('gemini-3.5-flash')
 
 # --- Helper Functions ---
 
