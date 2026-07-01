@@ -10,12 +10,10 @@ st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="
 
 # Configure the client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-# Using the standard model name without the "models/" prefix
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- Helper Functions ---
 
-# Image processing
 def process_image(uploaded_file):
     img = PIL.Image.open(uploaded_file)
     max_size = 1024
@@ -25,7 +23,6 @@ def process_image(uploaded_file):
         img = img.resize((max_size, new_height), PIL.Image.Resampling.LANCZOS)
     return img
 
-# Retry-enabled API call
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=10),
