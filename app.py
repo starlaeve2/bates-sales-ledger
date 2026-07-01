@@ -6,13 +6,14 @@ import google.generativeai as genai
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from google.api_core import exceptions
 from oauth2client.service_account import ServiceAccountCredentials
+import streamlit.components.v1 as components
 
 # 1. Configuration
 st.set_page_config(page_title="Bates Estates Ledger", page_icon="📸", layout="centered")
 
 # Configure the client
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-3.5-flash')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # --- Google Sheets Setup ---
 def get_sheet_client():
@@ -45,6 +46,7 @@ def get_ai_response(prompt, image):
 # --- Main App Logic ---
 st.title("Bates Estates Ledger 📸")
 
+# Initialize session state
 if 'temp_description' not in st.session_state:
     st.session_state.temp_description = ""
 
@@ -75,3 +77,12 @@ if submit_button:
         st.session_state.temp_description = ""
     except Exception as e:
         st.error(f"Could not submit to Sheet: {e}")
+
+# --- Google Form Embed ---
+st.subheader("Bates Estates Form")
+components.iframe(
+    "https://docs.google.com/forms/d/e/1FAIpQLSe6ZMMMHJMaFB_R0Sjk13umUqjC50Bvq2eVSGMv9BO-_N8_fw/viewform?embedded=true", 
+    width=700, 
+    height=520, 
+    scrolling=True
+)
